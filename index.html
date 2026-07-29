@@ -190,7 +190,7 @@
         .table tbody tr:hover { background-color: rgba(41,67,90,0.04); }
 
         /* Larguras das colunas — compactas e proporcionais */
-        .col-ano       { width: 90px;  }
+        .col-ano       { width: 110px; }
         .col-processo  { width: 110px; }
         .col-situacao  { width: 160px; }
         .col-parecer   { width: auto;  }
@@ -205,9 +205,12 @@
             font-weight: 700;
             font-size: 12px;
             padding: 3px 10px;
-            border-radius: 20px;
+            border-radius: 14px;
             letter-spacing: 0.5px;
-            white-space: nowrap;
+            white-space: normal;
+            word-break: normal;
+            line-height: 1.3;
+            max-width: 100%;
         }
 
         /* Links de documentos */
@@ -245,10 +248,11 @@
         .tag-situacao {
             display: inline-block;
             padding: 3px 9px;
-            border-radius: 20px;
+            border-radius: 14px;
             font-size: 11px;
             font-weight: 600;
-            white-space: nowrap;
+            white-space: normal;
+            line-height: 1.3;
         }
         .tag-aprovado {
             background-color: rgba(40, 167, 69, 0.1);
@@ -607,7 +611,7 @@
           parecerTCE: { url: "https://tcnotas.tce.mg.gov.br/tcjuris/Nota/BuscarArquivo/1442342", texto: "Parecer Prévio TCEMG 2016" },
           julgamentoALMG: { url: "https://www.almg.gov.br/legislacao-mineira/texto/RAL/5526/2018/", texto: "Julgamento ALMG 2016" },
           relatorioCGE: null },
-        { ano: "Exercícios anteriores", processo: "", situacao: "",
+        { ano: "Exercícios Anteriores", processo: "", situacao: "",
           parecerTCE: { url: "https://www.tce.mg.gov.br/noticia/Detalhe/1111625215", texto: "Pareceres Prévios" },
           julgamentoALMG: { url: "https://www.almg.gov.br/atividade-parlamentar/leis/legislacao-mineira/?pesquisou=true&aba=pesquisa&q=APROVA+AS+CONTAS+DO+GOVERNADOR+DO+ESTADO+EXERC%C3%8DCIO&grupo=&num=&ano=&dataInicio=&dataFim=&sit=&ordem=2", texto: "Julgamentos ALMG" },
           relatorioCGE: null }
@@ -629,8 +633,12 @@
             else if (item.situacao.includes('Em Julgamento'))     tagClass += 'tag-em-julgamento';
             else                                                   tagClass += 'tag-nao-avaliado';
 
+            const situacaoTexto = item.situacao === 'Aprovado com ressalvas'
+                ? 'Aprovado com<br>Ressalvas'
+                : item.situacao;
+
             const situacaoCell = item.situacao
-                ? `<span class="${tagClass}">${item.situacao}</span>`
+                ? `<span class="${tagClass}">${situacaoTexto}</span>`
                 : '<span class="nao-disponivel">—</span>';
 
             const processoCell = item.processo || '<span class="nao-disponivel">—</span>';
@@ -647,14 +655,14 @@
                        <i class="material-icons">open_in_new</i>
                        <span class="label">${item.julgamentoALMG.texto}</span>
                    </a>`
-                : '<span class="nao-disponivel">Não disponível</span>';
+                : '<span class="nao-disponivel">Aguardando<br>Julgamento pela ALMG</span>';
 
             const cgeCell = item.relatorioCGE
                 ? `<a href="${item.relatorioCGE.url}" target="_blank" class="document-link">
                        <i class="material-icons">open_in_new</i>
                        <span class="label">${item.relatorioCGE.texto}</span>
                    </a>`
-                : '<span class="nao-disponivel">Não disponível</span>';
+                : '<span class="nao-disponivel">-</span>';
 
             html += `
             <tr>
