@@ -465,10 +465,10 @@
                         <tr>
                             <th class="col-ano">Ano</th>
                             <th class="col-processo">Processo</th>
-                            <th class="col-situacao">Situação</th>
+                            <th class="col-cge">Rel. Controle Interno (CGE)</th>
                             <th class="col-parecer">Parecer Prévio TCEMG</th>
                             <th class="col-almg">Julgamento ALMG</th>
-                            <th class="col-cge">Rel. Controle Interno (CGE)</th>
+                            <th class="col-situacao">Situação</th>
                         </tr>
                     </thead>
                     <tbody id="tabelaBody">
@@ -668,10 +668,10 @@
             <tr>
                 <td><span class="ano-badge">${item.ano}</span></td>
                 <td>${processoCell}</td>
-                <td>${situacaoCell}</td>
+                <td>${cgeCell}</td>
                 <td>${parecerCell}</td>
                 <td>${almgCell}</td>
-                <td>${cgeCell}</td>
+                <td>${situacaoCell}</td>
             </tr>`;
         });
 
@@ -685,12 +685,12 @@
     // EXPORTAR CSV
     // ============================================================
     function exportarTabela() {
-        let csvLinhas = ['"Ano";"Processo";"Situação";"Parecer Prévio TCEMG";"Julgamento ALMG";"Relatório de Controle Interno (CGE)"'];
+        let csvLinhas = ['"Ano";"Processo";"Relatório de Controle Interno (CGE)";"Parecer Prévio TCEMG";"Julgamento ALMG";"Situação"'];
         dadosJulgamento.forEach(item => {
             const b = item.parecerTCE     ? `${item.parecerTCE.texto} - ${item.parecerTCE.url}`         : '—';
             const a = item.julgamentoALMG ? `${item.julgamentoALMG.texto} - ${item.julgamentoALMG.url}` : '—';
             const c = item.relatorioCGE   ? `${item.relatorioCGE.texto} - ${item.relatorioCGE.url}`     : '—';
-            csvLinhas.push(`"${item.ano}";"${item.processo || '—'}";"${item.situacao || '—'}";"${b}";"${a}";"${c}"`);
+            csvLinhas.push(`"${item.ano}";"${item.processo || '—'}";"${c}";"${b}";"${a}";"${item.situacao || '—'}"`);
         });
         const blob = new Blob(["\uFEFF" + csvLinhas.join('\n')], { type: 'text/csv;charset=utf-8;' });
         const link = document.createElement('a');
@@ -718,14 +718,14 @@
         const body = dadosJulgamento.map(item => [
             item.ano,
             item.processo || '—',
-            item.situacao || '—',
+            item.relatorioCGE   ? item.relatorioCGE.texto   : '—',
             item.parecerTCE     ? item.parecerTCE.texto     : '—',
             item.julgamentoALMG ? item.julgamentoALMG.texto : '—',
-            item.relatorioCGE   ? item.relatorioCGE.texto   : '—'
+            item.situacao || '—'
         ]);
 
         doc.autoTable({
-            head: [['Ano', 'Processo', 'Situação', 'Parecer Prévio TCEMG', 'Julgamento ALMG', 'Relatório de Controle Interno (CGE)']],
+            head: [['Ano', 'Processo', 'Relatório de Controle Interno (CGE)', 'Parecer Prévio TCEMG', 'Julgamento ALMG', 'Situação']],
             body,
             startY: 22,
             headStyles: { fillColor: [32, 68, 93] },
